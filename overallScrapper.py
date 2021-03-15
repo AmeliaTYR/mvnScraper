@@ -7,6 +7,8 @@ import csv
 if __name__ == '__main__':
     category_file = open('CategoryList.txt', 'r')
     Lines = category_file.readlines()
+    
+    URL = 'https://mvnrepository.com/open-source/'
 
     with open('overallPackages.csv', mode='w', newline='') as csv_file:
 
@@ -14,15 +16,13 @@ if __name__ == '__main__':
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
 
-        URL = 'https://mvnrepository.com/open-source/'
-
         for line in Lines:
             category = line.strip()
 
             for x in range(1, 11):
                 URL_page = URL + category + "?p=" + str(x)
 
-                page = requests.get(URL)
+                page = requests.get(URL_page)
 
                 soup = BeautifulSoup(page.content, 'html.parser')
 
@@ -48,4 +48,4 @@ if __name__ == '__main__':
                     if None in (pkg_title, pkg_subtitle):
                         continue
 
-                    writer.writerow({'category': 'Testing Frameworks', 'pkg_title': pkg_title.strip(), 'pkg_subtitle': pkg_subtitle.strip()})
+                    writer.writerow({'category': category, 'pkg_title': pkg_title.strip(), 'pkg_subtitle': pkg_subtitle.strip()})
